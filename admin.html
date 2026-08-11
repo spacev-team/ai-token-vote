@@ -90,13 +90,21 @@
 
       showResult(resultEl, '지우는 중…', true);
       try {
-        const r = await fetch(REMOTE_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'reset', eventId: EVENTS[target].id, adminKey: key }),
-          redirect: 'follow',
-        });
-        const res = await r.json();
+        /* 구글이 가끔 일시적 서버 오류를 던지므로 최대 3번까지 자동 재시도 */
+        let res;
+        for (let attempt = 1; attempt <= 3; attempt++) {
+          const r = await fetch(REMOTE_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'reset', eventId: EVENTS[target].id, adminKey: key }),
+            redirect: 'follow',
+          });
+          res = await r.json();
+          /* 성공했거나, 재시도해도 소용없는 오류(비밀번호 틀림 등)면 멈춤 */
+          if (res.ok || res.error === 'BAD_KEY' || res.error === 'UNKNOWN_ACTION') break;
+          showResult(resultEl, `일시 오류, 다시 시도 중… (${attempt}/3)`, true);
+          await new Promise((w) => setTimeout(w, 1500));
+        }
         if (res.ok) {
           /* 이 기기의 투표 기록도 함께 지워서 바로 재테스트 가능하게 */
           Object.keys(localStorage)
