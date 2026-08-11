@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F5FC">
+<title>관리자 · AI 토큰 투표</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<main class="shell">
+  <div class="hero">
+    <div class="badge-row"><span class="event-badge"><span class="dot"></span>진행자용 페이지</span></div>
+    <div class="hero-token" id="hero-token" aria-hidden="true"></div>
+    <h1 class="headline">AI 토큰 투표<br><span class="accent">진행자 대시보드</span></h1>
+    <p class="subline">공유할 링크와 진행 순서를 여기서 확인하세요.</p>
+  </div>
+
+  <div class="section-label">링크</div>
+  <div id="host-cards"></div>
+
+  <div class="section-label">진행 순서</div>
+  <div class="host-card">
+    <ol style="margin:0; padding-left:20px; font-size:14px; line-height:1.9; color:var(--ink-mid); font-weight:550">
+      <li>발표가 모두 끝나면 <b>투표 링크</b>를 QR/슬랙으로 공유합니다.</li>
+      <li>참석자가 각자 휴대폰으로 한 명에게 토큰을 보냅니다.</li>
+      <li>투표가 끝나면 큰 화면에 <b>결과 링크</b>를 띄웁니다.</li>
+      <li>“결과 보기”를 누르고 함께 우승자를 확인합니다.</li>
+    </ol>
+  </div>
+
+  <div class="section-label">확인해주세요</div>
+  <div class="notice" id="mode-notice"></div>
+</main>
+
+<div class="mode-pill" id="mode-pill" hidden></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/store.js"></script>
+<script src="assets/characters.js"></script>
+<script>
+(() => {
+  document.getElementById('hero-token').innerHTML = Characters.tokenSVG();
+
+  const order = ['practice', 'theory'];
+  document.getElementById('host-cards').innerHTML = order.map((key) => {
+    const ev = EVENTS[key];
+    return `
+    <div class="host-card">
+      <h2><span style="width:34px;display:inline-block">${Characters.robotSVG({ hue: ev.presenters[0].hue })}</span>${ev.label}</h2>
+      <p class="host-date">${ev.dateText} · 발표자 ${ev.presenters.length}명</p>
+      <div class="host-links">
+        <a class="host-link" href="vote.html?class=${key}">
+          <span>투표 링크 <span class="tag">참석자에게 공유</span></span><span class="arrow">→</span>
+        </a>
+        <a class="host-link" href="result.html?class=${key}">
+          <span>결과 링크 <span class="tag">큰 화면용</span></span><span class="arrow">→</span>
+        </a>
+        <a class="host-link" href="result.html?class=${key}&detail=1">
+          <span>결과 + 전체 집계표 <span class="tag">기록용</span></span><span class="arrow">→</span>
+        </a>
+      </div>
+    </div>`;
+  }).join('');
+
+  const notice = document.getElementById('mode-notice');
+  if (Store.mode === 'demo') {
+    notice.innerHTML = `<span>⚠️</span><div>
+      지금은 <b>데모 모드</b>입니다. 투표가 접속한 기기 안에만 저장되므로 여러 사람의 표가 합산되지 않습니다.<br>
+      실제 행사에서 쓰려면 <code>assets/config.js</code> 의 <code>REMOTE_ENDPOINT</code> 에
+      Apps Script 주소를 넣어주세요. 방법은 <code>README.md</code> 에 있습니다.</div>`;
+    document.getElementById('mode-pill').hidden = false;
+    document.getElementById('mode-pill').textContent = '데모 모드 · 이 기기에만 집계됨';
+  } else {
+    notice.innerHTML = `<span>✅</span><div>
+      <b>실제 집계 모드</b>입니다. 표가 서버에 모입니다.<br>
+      발표 제목은 <code>assets/config.js</code> 의 <code>title</code> 에 채워주세요.</div>`;
+  }
+})();
+</script>
+</body>
+</html>

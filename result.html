@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F5FC">
+<title>결과 공개 · AI 부트캠프 공유회</title>
+<meta name="description" content="오늘 가장 많은 토큰을 받은 발표자는 누구일까요?">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<main class="shell">
+
+  <!-- ===== 4. 결과 대기 화면 ===== -->
+  <section class="screen is-active gate" id="screen-gate">
+    <div class="hero">
+      <div class="badge-row">
+        <span class="event-badge"><span class="dot"></span><span id="badge-text">공유회</span></span>
+      </div>
+      <h1 class="headline">모두의 토큰이<br><span class="accent">전달됐어요!</span></h1>
+      <p class="subline">오늘 가장 많은 토큰을 받은 발표자는 누구일까요?</p>
+    </div>
+
+    <div class="gate-scene" id="gate-scene" aria-hidden="true"></div>
+
+    <button class="btn" id="btn-reveal" type="button">결과 보기</button>
+    <p class="foot-note" id="gate-note">화면을 크게 띄우고 함께 봐주세요.</p>
+  </section>
+
+  <!-- ===== 6. Winner 화면 ===== -->
+  <section class="screen winner" id="screen-winner">
+    <p class="winner-kicker">오늘 가장 많은 토큰을 받은 발표자는</p>
+    <div class="winner-multi" id="winner-stages"></div>
+    <div id="winner-tie-slot"></div>
+    <h1 class="winner-name" id="winner-name">—</h1>
+    <p class="winner-title" id="winner-title"></p>
+    <p class="winner-congrats">축하합니다!</p>
+    <div class="receipt" id="winner-count" hidden></div>
+    <div id="standings"></div>
+  </section>
+
+</main>
+
+<!-- ===== 5. 집계 애니메이션 ===== -->
+<div class="counting" id="counting" aria-live="polite">
+  <div class="swarm" id="swarm" aria-hidden="true"></div>
+  <div class="counting-inner">
+    <div class="counting-core">
+      <span class="core-glow" aria-hidden="true"></span>
+      <div id="core-token" aria-hidden="true"></div>
+    </div>
+    <p class="stage-caption" id="counting-caption">토큰을 세고 있어요<span class="dots"></span></p>
+  </div>
+</div>
+
+<div class="flash" id="flash" aria-hidden="true"></div>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+<div class="mode-pill" id="mode-pill" hidden></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/store.js"></script>
+<script src="assets/characters.js"></script>
+<script src="assets/result.js"></script>
+</body>
+</html>

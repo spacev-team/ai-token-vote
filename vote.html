@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F5FC">
+<title>토큰 보내기 · AI 부트캠프 공유회</title>
+<meta name="description" content="당신의 토큰을 가장 마음에 든 발표자에게 주세요.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<main class="shell">
+
+  <!-- ===== 0. 메인(인트로) 화면 ===== -->
+  <section class="screen is-active intro" id="screen-intro">
+    <div class="hero">
+      <div class="badge-row">
+        <span class="event-badge">
+          <span class="dot"></span>
+          <span id="badge-text">공유회</span>
+        </span>
+      </div>
+
+      <div class="intro-scene" id="intro-scene" aria-hidden="true"></div>
+
+      <h1 class="headline">
+        <span class="accent">가장 마음에 든 발표자</span>에게<br>
+        토큰을 주세요
+      </h1>
+      <p class="subline">오늘 발표 중 가장 마음에 든 한 명에게<br>내 토큰 1개를 보낼 수 있어요.</p>
+    </div>
+
+    <div class="intro-actions" id="intro-actions"></div>
+    <p class="intro-hint">익명 투표예요. 누가 보냈는지 기록되지 않아요.</p>
+  </section>
+
+  <!-- ===== 1. 투표 화면 ===== -->
+  <section class="screen" id="screen-vote">
+    <div class="badge-row" style="display:flex; justify-content:center">
+      <span class="event-badge"><span class="dot"></span><span id="badge-text-2">공유회</span></span>
+    </div>
+
+    <div class="vote-head">
+      <h2>누구에게 줄까요?</h2>
+      <p>딱 한 명만 고를 수 있어요.</p>
+    </div>
+
+    <div class="section-label">오늘의 발표자</div>
+    <div class="card-grid" id="card-grid"></div>
+
+    <p class="foot-note">
+      토큰은 한 사람에게 한 개만 보낼 수 있어요.<br>
+      누가 누구에게 보냈는지는 기록되지 않습니다.
+    </p>
+  </section>
+
+  <!-- ===== 3. 완료 화면 ===== -->
+  <section class="screen done" id="screen-done">
+    <div class="done-robot" id="done-robot">
+      <span class="done-ring" aria-hidden="true"></span>
+    </div>
+    <h1>토큰 전달 완료!</h1>
+    <p class="done-sub">당신의 토큰이 무사히 전달됐어요.</p>
+    <div class="receipt" id="receipt"></div>
+    <p class="foot-note">
+      결과는 공유회 현장에서 함께 공개할 거예요.<br>
+      그때까지 조금만 기다려주세요 🤫
+    </p>
+  </section>
+
+</main>
+
+<!-- ===== 확인 시트 ===== -->
+<div class="sheet-backdrop" id="sheet-backdrop" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-robot" id="sheet-robot"></div>
+    <h2 id="sheet-title">—</h2>
+    <p class="sheet-note" id="sheet-note">
+      한 번 보내면 <strong>바꿀 수 없어요.</strong>
+    </p>
+    <button class="btn" id="btn-confirm" type="button">
+      <span class="token-slot" aria-hidden="true"></span>
+      토큰 보내기
+    </button>
+    <button class="btn btn-ghost" id="btn-cancel" type="button">다시 고르기</button>
+  </div>
+</div>
+
+<!-- ===== 2. 토큰 전송 애니메이션 ===== -->
+<div class="stage" id="stage" aria-live="polite">
+  <div class="stage-inner">
+    <div class="stage-robot" id="stage-robot">
+      <div class="token-flyer" id="token-flyer" aria-hidden="true"></div>
+      <div class="munch-burst" id="munch-burst" aria-hidden="true"></div>
+    </div>
+    <p class="stage-caption" id="stage-caption">토큰 전달 중<span class="dots"></span></p>
+  </div>
+</div>
+
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+<div class="mode-pill" id="mode-pill" hidden></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/store.js"></script>
+<script src="assets/characters.js"></script>
+<script src="assets/vote.js"></script>
+</body>
+</html>
