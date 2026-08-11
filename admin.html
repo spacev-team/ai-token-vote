@@ -20,47 +20,25 @@
     <div class="badge-row"><span class="event-badge"><span class="dot"></span>진행자용 페이지</span></div>
     <div class="hero-token" id="hero-token" aria-hidden="true"></div>
     <h1 class="headline">AI 토큰 투표<br><span class="accent">진행자 대시보드</span></h1>
-    <p class="subline">공유할 링크와 진행 순서를 여기서 확인하세요.</p>
   </div>
-
-  <div class="section-label">링크</div>
-  <div id="host-cards"></div>
 
   <div class="section-label">진행 순서</div>
   <div class="host-card">
     <ol style="margin:0; padding-left:20px; font-size:14px; line-height:1.9; color:var(--ink-mid); font-weight:550">
-      <li>발표가 모두 끝나면 <b>투표 링크</b>를 QR/슬랙으로 공유합니다.</li>
+      <li>발표가 모두 끝나면 <b>투표 사이트 주소</b>를 QR/슬랙으로 공유합니다.</li>
       <li>참석자가 각자 휴대폰으로 한 명에게 토큰을 보냅니다.</li>
-      <li>투표가 끝나면 큰 화면에 <b>결과 링크</b>를 띄웁니다.</li>
-      <li>“결과 보기”를 누르고 함께 우승자를 확인합니다.</li>
+      <li>투표가 끝나면 아래 <b>결과 보기</b>를 큰 화면에 띄웁니다.</li>
+      <li>“결과 보기” 버튼을 누르고 함께 우승자를 확인합니다.</li>
     </ol>
   </div>
 
-  <div class="section-label">데이터 초기화</div>
-  <div class="host-card" id="reset-card">
-    <p style="margin:0 0 14px; font-size:13.5px; line-height:1.65; color:var(--ink-mid); font-weight:550">
-      테스트 후 표를 지우고 처음부터 시작할 때 사용하세요.
-      Apps Script 에 설정한 <b>관리자 비밀번호</b>가 필요합니다.
-    </p>
-    <div class="host-links">
-      <button class="host-link reset-btn" data-target="practice" type="button">
-        <span>실습반 표만 지우기</span><span class="arrow">🗑</span>
-      </button>
-      <button class="host-link reset-btn" data-target="theory" type="button">
-        <span>이론반 표만 지우기</span><span class="arrow">🗑</span>
-      </button>
-      <button class="host-link reset-btn" data-target="all" type="button">
-        <span><b>전체 초기화</b> <span class="tag">테스트 표 포함 모두 삭제</span></span><span class="arrow">🗑</span>
-      </button>
-    </div>
-    <p id="reset-result" style="margin:12px 0 0; font-size:13px; font-weight:700; display:none"></p>
-    <p style="margin:14px 0 0; font-size:12px; line-height:1.6; color:var(--ink-soft)">
-      ⚠️ 초기화해도 이미 투표한 <b>기기의 "투표 완료" 화면</b>은 남아 있어요.
-      테스트에 참여했던 사람에게는 아래 링크를 한 번 열게 하면 다시 투표할 수 있습니다.<br>
-      실습반: <code>vote.html?class=practice&amp;reset=1</code> ·
-      이론반: <code>vote.html?class=theory&amp;reset=1</code>
-    </p>
-  </div>
+  <div class="section-label">반별 관리</div>
+  <div id="host-cards"></div>
+
+  <p style="margin:6px 2px 0; font-size:12px; line-height:1.65; color:var(--ink-soft)">
+    ⚠️ 초기화해도 이미 투표한 <b>기기의 “투표 완료” 화면</b>은 남아요. 테스트 참여자에게는
+    주소 뒤에 <code>&amp;reset=1</code> 을 붙인 투표 링크를 한 번 열게 하면 다시 투표할 수 있습니다.
+  </p>
 
   <div class="section-label">확인해주세요</div>
   <div class="notice" id="mode-notice"></div>
@@ -83,26 +61,24 @@
       <h2><span style="width:34px;display:inline-block">${Characters.robotSVG({ hue: ev.presenters[0].hue })}</span>${ev.label}</h2>
       <p class="host-date">${ev.dateText} · 발표자 ${ev.presenters.length}명</p>
       <div class="host-links">
-        <a class="host-link" href="vote.html?class=${key}">
-          <span>투표 링크 <span class="tag">참석자에게 공유</span></span><span class="arrow">→</span>
-        </a>
         <a class="host-link" href="result.html?class=${key}">
-          <span>결과 링크 <span class="tag">큰 화면용</span></span><span class="arrow">→</span>
+          <span>결과 보기 <span class="tag">행사날 큰 화면에</span></span><span class="arrow">→</span>
         </a>
-        <a class="host-link" href="result.html?class=${key}&detail=1">
-          <span>결과 + 전체 집계표 <span class="tag">기록용</span></span><span class="arrow">→</span>
-        </a>
+        <button class="host-link reset-btn" data-target="${key}" type="button">
+          <span>데이터 초기화 <span class="tag">이 반 표 전부 삭제</span></span><span class="arrow">🗑</span>
+        </button>
       </div>
+      <p class="reset-result" id="reset-result-${key}" style="margin:12px 0 0; font-size:13px; font-weight:700; display:none"></p>
     </div>`;
   }).join('');
 
   /* ---------------- 데이터 초기화 ---------------- */
-  const LABELS = { practice: '실습반', theory: '이론반', all: '전체' };
+  const LABELS = { practice: '실습반', theory: '이론반' };
 
   document.querySelectorAll('.reset-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const target = btn.dataset.target;
-      const resultEl = document.getElementById('reset-result');
+      const resultEl = document.getElementById('reset-result-' + target);
 
       if (!REMOTE_ENDPOINT) {
         showResult(resultEl, '데모 모드에서는 서버에 지울 데이터가 없어요. 이 기기 기록은 vote.html?reset=1 로 지웁니다.', false);
@@ -114,19 +90,17 @@
 
       showResult(resultEl, '지우는 중…', true);
       try {
-        const eventId = target === 'all' ? 'all' : EVENTS[target].id;
         const r = await fetch(REMOTE_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'reset', eventId, adminKey: key }),
+          body: JSON.stringify({ action: 'reset', eventId: EVENTS[target].id, adminKey: key }),
           redirect: 'follow',
         });
         const res = await r.json();
         if (res.ok) {
           /* 이 기기의 투표 기록도 함께 지워서 바로 재테스트 가능하게 */
           Object.keys(localStorage)
-            .filter((k) => k.startsWith('aitoken:voted:') || k.startsWith('aitoken:tally:'))
-            .filter((k) => target === 'all' || k.includes(EVENTS[target].id))
+            .filter((k) => (k.startsWith('aitoken:voted:') || k.startsWith('aitoken:tally:')) && k.includes(EVENTS[target].id))
             .forEach((k) => localStorage.removeItem(k));
           showResult(resultEl, `✅ ${LABELS[target]} 표 ${res.deleted}개 삭제 완료 (이 기기 기록도 초기화됨)`, true);
         } else if (res.error === 'BAD_KEY') {
@@ -158,7 +132,7 @@
     document.getElementById('mode-pill').textContent = '데모 모드 · 이 기기에만 집계됨';
   } else {
     notice.innerHTML = `<span>✅</span><div>
-      <b>실제 집계 모드</b>입니다. 표가 서버에 모입니다.<br>
+      <b>실제 집계 모드</b>입니다. 표가 구글 시트에 모입니다.<br>
       발표 제목은 <code>assets/config.js</code> 의 <code>title</code> 에 채워주세요.</div>`;
   }
 })();
