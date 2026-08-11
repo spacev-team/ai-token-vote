@@ -1044,6 +1044,13 @@ p.subline {
   font-weight: 550;
 }
 .host-links { display: grid; gap: 9px; }
+button.host-link {
+  border: 0;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
 .host-link {
   display: flex;
   align-items: center;

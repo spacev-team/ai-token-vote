@@ -10,6 +10,10 @@
 
 var SHEET_NAME = 'votes';
 
+/* ★ 관리자 비밀번호 — 붙여넣은 뒤 반드시 원하는 값으로 바꾸세요.
+   admin.html 의 '데이터 초기화' 버튼에서 이 값을 물어봅니다. */
+var ADMIN_KEY = 'CHANGE-ME';
+
 function doPost(e) {
   try {
     var req = JSON.parse(e.postData.contents);
@@ -20,9 +24,40 @@ function doPost(e) {
     if (req.action === 'tally') {
       return json({ ok: true, tally: tallyFor(req.eventId) });
     }
+    if (req.action === 'reset') {
+      if (!req.adminKey || req.adminKey !== ADMIN_KEY) {
+        return json({ ok: false, error: 'BAD_KEY' });
+      }
+      return json(resetVotes(req.eventId));
+    }
     return json({ ok: false, error: 'UNKNOWN_ACTION' });
   } catch (err) {
     return json({ ok: false, error: String(err) });
+  }
+}
+
+/** eventId 가 'all' 이면 전체, 아니면 해당 행사 표만 삭제합니다. */
+function resetVotes(eventId) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var sheet = getSheet();
+    if (!eventId || eventId === 'all') {
+      var n = Math.max(sheet.getLastRow() - 1, 0);
+      if (n > 0) sheet.deleteRows(2, n);
+      return { ok: true, deleted: n };
+    }
+    var rows = sheet.getDataRange().getValues();
+    var deleted = 0;
+    for (var i = rows.length - 1; i >= 1; i--) {
+      if (rows[i][1] === eventId) {
+        sheet.deleteRow(i + 1);
+        deleted++;
+      }
+    }
+    return { ok: true, deleted: deleted };
+  } finally {
+    lock.releaseLock();
   }
 }
 
