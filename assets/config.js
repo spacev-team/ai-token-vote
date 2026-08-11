@@ -13,7 +13,7 @@
 /* 비워두면 '데모 모드'로 동작합니다.
    데모 모드: 투표가 접속한 기기에만 저장됩니다. 화면/애니메이션 확인용.
    실제 행사에서는 반드시 REMOTE_ENDPOINT 를 채워주세요. */
-const REMOTE_ENDPOINT = '';
+const REMOTE_ENDPOINT = 'https://script.google.com/a/macros/spacev.kr/s/AKfycbx2CCxNyJib3X-o7a9BwOj9gCJIwyjFLkASWwOR9-CjvskuyP_qSGiU1KrR00x9OLjccg/exec';
 
 const EVENTS = {
   /* ---------------- 실습반 : 8/19 (수) 18:00 ---------------- */
